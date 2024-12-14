@@ -49,8 +49,8 @@ fn get_untar_dst<P: AsRef<Path>>(src: P) -> Option<PathBuf> {
     }
 
     let file_name = pth.unwrap();
-
     let extracted_fname = Path::new(ARCHIVES_CACHE_DIR).join(file_name);
+
     Some(extracted_fname)
 }
 

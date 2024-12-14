@@ -5,3 +5,5 @@ pub const ARCHIVES_CACHE_DIR: &str = "/var/cache/lpkg/archives/";
 pub const EXTRACT_PKGS_CACHE_DIR: &str = "/var/cache/lpkg/extracted/";
 // pub const LOG_FILE_PATH: &str = "/var/log/lpkg.log";
 pub const LOG_FILE_PATH: &str = "./lpkg.log";
+pub const DB_PACKAGES_DIR: &str = "/var/db/lpkg/";
+pub const DB_PACKAGES_FILE: &str = "/var/db/lpkg/packages.toml";

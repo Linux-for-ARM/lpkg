@@ -1,0 +1,22 @@
+[package]
+name = "lpkg"
+version = "0.1.0"
+edition = "2021"
+description = "Simple package manager for LFA"
+authors = ["Michail Krasnov <michail383krasnov@mail.ru>"]
+license = "MIT"
+
+[profile.release]
+lto = true
+strip = true
+debug = false
+panic = "abort"
+opt-level = "s"
+
+[dependencies]
+clap = { version = "4.5.21", features = ["derive"] }
+colored = "2.1.0"
+rust-lzma = "0.6.0"
+serde = { version = "1.0.215", features = ["derive"] }
+tar = "0.4.43"
+toml = "0.8.19"

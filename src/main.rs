@@ -1,20 +1,21 @@
-// use clap::Parser;
-// use lpkg::cli::*;
+use std::process::exit;
 
-use std::env::args;
-use std::fs::File;
-use std::path::Path;
-use lpkg::archive::Archive;
+use clap::Parser;
+use lpkg::cli::*;
+use lpkg::err_msg;
 
-use lpkg::{msg, ok_msg};
+use lpkg::install::install;
 
 fn main() {
-    // let _cli = Cli::parse();
-    let argv = args().collect::<Vec<_>>();
-    let f = File::open(&argv[1]).unwrap();
-    let mut a = Archive::new(&Path::new(&argv[0]), f);
-    a.ls().unwrap();
-    a.ls().unwrap();
-    msg!("Reading metadata...");
-    ok_msg!("{:#?}", a.metadata().unwrap());
+    let cli = Cli::parse();
+
+    match cli.command {
+        Command::Install { packages, prefix } => {
+            if let Err(why) = install(&packages, &prefix) {
+                err_msg!("Install error: {why}");
+                exit(1);
+            }
+        }
+        _ => {}
+    }
 }

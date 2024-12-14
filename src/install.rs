@@ -1,12 +1,12 @@
 //! Package installer
 
 use crate::consts::ARCHIVES_CACHE_DIR;
-use crate::{dbg_msg, error::*, msg2};
+use crate::db::Db;
 use crate::meta::Meta;
 use crate::package::{untar, unxz};
-use crate::{msg, ok_msg};
-use crate::db::Db;
 use crate::traits::Toml;
+use crate::{dbg_msg, error::*, msg2};
+use crate::{msg, ok_msg};
 
 // use colored::Colorize;
 use std::path::{Path, PathBuf};
@@ -94,7 +94,7 @@ fn install_files<E: AsRef<Path>, P: AsRef<Path>>(extracted_pth: E, prefix: P) ->
     untar(pkgfiles, &prefix)
 }
 
-fn add_to_db<P: AsRef<Path>>(extracted_pth: P) -> Result<()> {
+fn add_to_db<P: AsRef<Path>, I: AsRef<Path>>(extracted_pth: P, prefix: I) -> Result<()> {
     let package_toml = extracted_pth.as_ref().join("package.toml");
 
     dbg_msg!("Read package metadata in {:?}...", &package_toml);
@@ -103,7 +103,12 @@ fn add_to_db<P: AsRef<Path>>(extracted_pth: P) -> Result<()> {
     dbg_msg!("Opening lpkg database...");
     let mut db = Db::open()?;
     dbg_msg!("Adding package to database...");
-    db.add_pkg(meta.package.clone(), meta.deps.clone())?;
+    db.add_pkg(
+        meta.package.clone(),
+        meta.deps.clone(),
+        &extracted_pth,
+        prefix,
+    )?;
 
     Ok(())
 }
@@ -131,7 +136,7 @@ pub fn install<P: AsRef<Path>, I: AsRef<Path>>(packages: &[P], prefix: I) -> Res
         install_files(&extr_pth, &prefix)?;
 
         msg2!("Add package to local database...");
-        add_to_db(&extr_pth)?;
+        add_to_db(&extr_pth, &prefix)?;
 
         ok_msg!("Installation succesfull! Have a nice day.\n");
         i += 1;

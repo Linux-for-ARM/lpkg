@@ -76,6 +76,17 @@ pub fn write<P: AsRef<Path>, C: AsRef<[u8]>>(path: P, cont: C) -> Result<()> {
     })
 }
 
+pub fn copy<S: AsRef<Path>, D: AsRef<Path>>(src: S, dst: D) -> Result<u64> {
+    fs::copy(&src, &dst).map_err(|err| {
+        Error::new(&err).error_kind(match err.kind() {
+            io::ErrorKind::NotFound => ErrorKind::NotFound,
+            io::ErrorKind::PermissionDenied => ErrorKind::PermissionDenied,
+            io::ErrorKind::InvalidData => ErrorKind::InvalidData,
+            _ => ErrorKind::Other,
+        })
+    })
+}
+
 pub fn write_append<P: AsRef<Path>, C: AsRef<[u8]>>(path: P, cont: C) -> Result<()> {
     let mut f = fs::File::options()
         .append(true)

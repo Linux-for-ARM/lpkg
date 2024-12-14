@@ -45,8 +45,5 @@ pub enum Command {
 
         #[arg(short, long)]
         arch: bool,
-
-        #[arg(short, long)]
-        size: bool,
     },
 }

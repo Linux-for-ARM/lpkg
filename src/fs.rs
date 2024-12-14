@@ -89,6 +89,7 @@ pub fn copy<S: AsRef<Path>, D: AsRef<Path>>(src: S, dst: D) -> Result<u64> {
 
 pub fn write_append<P: AsRef<Path>, C: AsRef<[u8]>>(path: P, cont: C) -> Result<()> {
     let mut f = fs::File::options()
+        .create(true)
         .append(true)
         .open(&path)
         .map_err(|err| {

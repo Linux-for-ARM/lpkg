@@ -6,7 +6,7 @@ use colored::Colorize;
 
 use crate::db::Db;
 use crate::error::*;
-use crate::{err_msg, msg};
+use crate::{err_msg, msg, msg2};
 
 pub fn list_all(ver: bool, arch: bool) -> Result<()> {
     let pkgs_all = Db::open()?.entries;
@@ -39,6 +39,11 @@ pub fn info(pkgname: &str) -> Result<()> {
             print_info("maintainer", &pkg.package.maintainer);
             print_info("architecture", &pkg.package.arch);
             print_info("install prefix", &pkg.install_prefix);
+
+            if let Some(descr) = &pkg.package.description {
+                println!();
+                msg2!("Description:\n{descr}");
+            }
 
             if let Some(deps) = &pkg.deps {
                 println!();

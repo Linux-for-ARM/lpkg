@@ -6,9 +6,11 @@ use lpkg::err_msg;
 
 use lpkg::install::install;
 use lpkg::info::{list_all, info};
+use lpkg::log::print_experimental_banner;
 
 fn main() {
     let cli = Cli::parse();
+    print_experimental_banner();
 
     match cli.command {
         Command::Install { packages, prefix } => {

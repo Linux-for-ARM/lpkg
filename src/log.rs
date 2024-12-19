@@ -1,7 +1,16 @@
 //! Logging (print messages to `stderr`/`stdout`, write messages to log file)
 
+use colored::Colorize;
+
 pub fn set_colors(is_color: bool) {
     colored::control::set_override(is_color);
+}
+
+pub fn print_experimental_banner() {
+    eprintln!("+{}+", "=".repeat(78));
+    let msg = format!("{} {}", "Note:".magenta(), "This is an experimental version of lpkg").bold();
+    eprintln!("| {msg}{:>width$}", "|", width = (78 - msg.len() + 9));
+    eprintln!("+{}+\n", "=".repeat(78));
 }
 
 #[macro_export]

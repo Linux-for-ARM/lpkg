@@ -8,7 +8,12 @@ pub fn set_colors(is_color: bool) {
 
 pub fn print_experimental_banner() {
     eprintln!("+{}+", "=".repeat(78));
-    let msg = format!("{} {}", "Note:".magenta(), "This is an experimental version of lpkg").bold();
+    let msg = format!(
+        "{} {}",
+        "Note:".magenta(),
+        "This is an experimental version of lpkg"
+    )
+    .bold();
     eprintln!("| {msg}{:>width$}", "|", width = (78 - msg.len() + 9));
     eprintln!("+{}+\n", "=".repeat(78));
 }
@@ -62,6 +67,19 @@ macro_rules! err_msg {
 
         println!("{}{}{} {}", "[".bold(), "E".bold().red(), "]".bold(), format_args!($($arg)*));
         let _ = write_append(LOG_FILE_PATH, format!("ERROR: {}\n", format_args!($($arg)*)));
+    }};
+}
+
+#[macro_export]
+macro_rules! warn_msg {
+    ($($arg:tt)*) => {{
+        use $crate::consts::LOG_FILE_PATH;
+        use $crate::fs::write_append;
+
+        use colored::Colorize;
+
+        println!("{}{}{} {}", "[".bold(), "W".bold().yellow(), "]".bold(), format_args!($($arg)*));
+        let _ = write_append(LOG_FILE_PATH, format!("WARNING: {}\n", format_args!($($arg)*)));
     }};
 }
 

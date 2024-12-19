@@ -83,8 +83,14 @@ impl Db {
         Ok(())
     }
 
+    pub fn check_pkg(&self, pkgname: &str) -> bool {
+        self.entries.get(pkgname).is_some()
+    }
+
     pub fn remove_pkg(&mut self, pkgname: &str) -> Result<()> {
         self.entries.remove(pkgname);
+        std::fs::remove_file(Path::new(DB_PACKAGES_DIR).join("{pkgname}.txt"))
+            .map_err(|err| Error::new(err))?;
 
         self.write(DB_PACKAGES_FILE)
     }
